@@ -8,36 +8,36 @@ There are five functions, each of which is an HTTP endpoints.
 
 ## Get all projects.
 
-PATH: `/projects`
-METHOD: `GET`
+- PATH: `/projects`
+- METHOD: `GET`
 
 Returns a list of all projects, without their tasks.
 
 ## Get one project
 
-PATH: `/projects/{projectId}`
-METHOD: `GET`
+- PATH: `/projects/{projectId}`
+- METHOD: `GET`
 
 Returns one project with its associated tasks.
 
 ## Create project
 
-PATH: `/projects`
-METHOD: `POST`
+- PATH: `/projects`
+- METHOD: `POST`
 
 Create a new project, passing `name` in the JSON request body.
 
 ## Create tasks
 
-PATH: `/projects/${projectId}/tasks`
-METHOD: `POST`
+- PATH: `/projects/${projectId}/tasks`
+- METHOD: `POST`
 
 Create a new task, which is assigned to the project with the specified `projectId`. Pass `title` in the JSON request body.
 
 ## Mark task as complete
 
-PATH: `/projects/${projectId}/tasks/{taskId}`
-METHOD: `PATCH`
+- PATH: `/projects/${projectId}/tasks/{taskId}`
+- METHOD: `PATCH`
 
 Updates the `completed` field of a task to `true`.
 
