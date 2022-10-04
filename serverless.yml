@@ -1,0 +1,75 @@
+org: cweiser44
+app: junglytics-demo
+service: projects
+frameworkVersion: "3"
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+  environment:
+    DYNAMODB_PROJECT_TABLE: ${self:service}-projectTable-${sls:stage}
+  iam:
+    role:
+      statements:
+        - Effect: "Allow"
+          Action:
+            - "dynamodb:PutItem"
+            - "dynamodb:Get*"
+            - "dynamodb:Scan*"
+            - "dynamodb:Query*"
+            - "dynamodb:UpdateItem"
+            - "dynamodb:DeleteItem"
+          Resource: arn:aws:dynamodb:${aws:region}:${aws:accountId}:table/${self:service}-projectTable-${sls:stage}
+
+functions:
+  createProject:
+    handler: handler.createProject
+    events:
+      - httpApi:
+          path: /projects
+          method: post
+
+  getAllProjects:
+    handler: handler.getAllProjects
+    events:
+      - httpApi:
+          path: /projects
+          method: get
+
+  getOneProject:
+    handler: handler.getOneProject
+    events:
+      - httpApi:
+          path: /projects/{projectId}
+          method: get
+
+  createTask:
+    handler: handler.createTask
+    events:
+      - httpApi:
+          path: /projects/{projectId}/tasks
+          method: post
+
+  markTaskComplete:
+    handler: handler.markTaskComplete
+    events:
+      - httpApi:
+          path: /projects/{projectId}/tasks/{taskId}
+          method: patch
+resources:
+  Resources:
+    ProjectTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        AttributeDefinitions:
+          - AttributeName: PK
+            AttributeType: S
+          - AttributeName: SK
+            AttributeType: S
+        BillingMode: PAY_PER_REQUEST
+        KeySchema:
+          - AttributeName: PK
+            KeyType: HASH
+          - AttributeName: SK
+            KeyType: RANGE
+        TableName: ${self:service}-projectTable-${sls:stage}
